@@ -1,0 +1,44 @@
+import Link from "next/link";
+
+export type SimpleMenuItem = {
+  id: string;
+  slug: string;
+  name: string;
+  description?: string | null;
+  basePrice: number;
+  imageUrl?: string | null;
+};
+
+type MenuItemCardProps = {
+  item: SimpleMenuItem;
+};
+
+export function MenuItemCard({ item }: MenuItemCardProps) {
+  return (
+    <article className="bg-white border rounded-xl p-3 flex flex-col gap-2">
+      <div className="aspect-video rounded-lg bg-slate-200 flex items-center justify-center text-xs text-slate-500">
+        {item.imageUrl ? "Image" : "Item image"}
+      </div>
+      <div className="flex-1 space-y-1">
+        <h2 className="font-medium text-sm">{item.name}</h2>
+        {item.description && (
+          <p className="text-xs text-slate-600 line-clamp-2">
+            {item.description}
+          </p>
+        )}
+        <p className="text-sm font-semibold">${item.basePrice.toFixed(2)}</p>
+      </div>
+      <div className="flex items-center justify-between mt-2">
+        <Link
+          href={`/menu/${item.slug}`}
+          className="text-xs text-amber-700 hover:underline"
+        >
+          Customise
+        </Link>
+        <button className="text-xs rounded-full bg-amber-600 text-white px-3 py-1 hover:bg-amber-700">
+          Add to Cart
+        </button>
+      </div>
+    </article>
+  );
+}
