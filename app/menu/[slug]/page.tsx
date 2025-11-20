@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import { ItemCustomizer } from "@/components/menu/ItemCustomizer";
+import Image from "next/image";
 
 type Props = {
   params: { slug: string };
@@ -15,10 +16,14 @@ export default async function ItemDetailPage({ params }: Props) {
     notFound();
   }
 
+
   return (
     <div className="grid gap-8 md:grid-cols-2">
-      <div className="aspect-[4/3] bg-slate-200 rounded-xl flex items-center justify-center text-sm text-slate-500">
-        Item image goes here
+      <div className="relative aspect-[4/3] bg-slate-200 rounded-xl flex items-center justify-center text-sm text-slate-500">
+        <Image src={item.imageUrl ? item.imageUrl : ''}
+               alt={item.name}
+               fill
+                />
       </div>
 
       <div className="space-y-4">

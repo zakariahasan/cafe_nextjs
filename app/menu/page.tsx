@@ -13,6 +13,8 @@ export default async function MenuPage() {
     },
   });
 
+  
+
   return (
     <div className="space-y-6">
       <header className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
@@ -38,8 +40,8 @@ export default async function MenuPage() {
       )}
 
       {categories.map((category) => (
-        <section key={category.id} className="space-y-3">
-          <h2 className="text-lg font-semibold">{category.name}</h2>
+        <section key={category.id} className="space-y-5">
+          <h2 className="text-lg font-semibold capitalize">{category.name}</h2>
           {category.description && (
             <p className="text-xs text-slate-600">{category.description}</p>
           )}
@@ -52,14 +54,7 @@ export default async function MenuPage() {
               {category.items.map((item) => (
                 <MenuItemCard
                   key={item.id}
-                  item={{
-                    id: item.id,
-                    slug: item.slug,
-                    name: item.name,
-                    description: item.description,
-                    basePrice: item.basePrice,
-                    imageUrl: item.imageUrl,
-                  }}
+                  item={item}
                 />
               ))}
             </div>

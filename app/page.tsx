@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 export default function HomePage() {
   return (
@@ -27,8 +28,11 @@ export default function HomePage() {
             </Link>
           </div>
         </div>
-        <div className="aspect-[4/3] bg-slate-200 rounded-xl shadow-inner flex items-center justify-center text-slate-500 text-sm">
-          Hero image of cafe / food goes here
+        <div className="aspect-[4/3] bg-slate-200 rounded-xl shadow-inner flex items-center justify-center text-slate-500 text-sm relative overflow-hidden">
+          <Image src={'/images/hero/hero.jpg'}
+                 alt="hero"
+                 fill
+                 className="w-full h-full object-cover" />
         </div>
       </section>
 
@@ -46,8 +50,15 @@ export default function HomePage() {
           <p className="text-sm text-slate-600">
             123 Bean Street, Sydney NSW 2000
           </p>
-          <div className="mt-3 h-40 bg-slate-200 rounded-lg flex items-center justify-center text-xs text-slate-500">
-            Embedded map goes here
+          <div className="mt-3 h-40 bg-slate-200 rounded-lg flex items-center justify-center text-xs text-slate-500 overflow-hidden">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d13251.379761711612!2d151.19050807637768!3d-33.86788679996282!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6b12ae401e8b983f%3A0x5017d681632ccc0!2sSydney%20NSW%202000%2C%20Australia!5e0!3m2!1sen!2sfr!4v1763563256460!5m2!1sen!2sfr"
+                    width="600"
+                    height="450"
+                    style={{ border: 0 }} 
+                    allowFullScreen
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade">
+            </iframe>
           </div>
         </div>
       </section>
