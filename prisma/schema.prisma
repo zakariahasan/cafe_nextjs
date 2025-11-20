@@ -74,7 +74,9 @@ model Item {
   name        String
   slug        String     @unique
   description String?
-  basePrice   Float
+  basePrice   Float?
+  isMultiPrice Boolean  @default(false)
+  multiPrice  String?
   imageUrl    String?
   // SQLite can't store primitive lists, so store tags as a simple string instead
   // e.g. "vegan,gluten-free,spicy"
@@ -88,6 +90,7 @@ model Item {
   // Back-relation to OrderItem
   orderItems  OrderItem[]
 }
+
 
 model Offer {
   id            String   @id @default(cuid())

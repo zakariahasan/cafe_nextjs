@@ -1,23 +1,38 @@
+'use client';
+
 import Link from "next/link";
+import Image from "next/image";
+import MenuItemCardType from "@/types/components/menuItemCard/menuItemCard";
 
-export type SimpleMenuItem = {
-  id: string;
-  slug: string;
-  name: string;
-  description?: string | null;
-  basePrice: number;
-  imageUrl?: string | null;
+// export type SimpleMenuItem = {
+//   id: string;
+//   slug: string;
+//   name: string;
+//   description?: string | null;
+//   basePrice: number | null;
+//   isMultiPrice: boolean,
+//   multiPrice: string | null
+//   imageUrl?: string | null;
+// };
+
+type Props = {
+  item: MenuItemCardType;
 };
 
-type MenuItemCardProps = {
-  item: SimpleMenuItem;
-};
+export function MenuItemCard({ item }: Props) {
 
-export function MenuItemCard({ item }: MenuItemCardProps) {
+  const t = item.multiPrice ? JSON.parse(item.multiPrice) : {}
+  console.log(item.basePrice)
+  console.log(t)
   return (
     <article className="bg-white border rounded-xl p-3 flex flex-col gap-2">
       <div className="aspect-video rounded-lg bg-slate-200 flex items-center justify-center text-xs text-slate-500">
-        {item.imageUrl ? "Image" : "Item image"}
+        {item.imageUrl ? <Image src={item.imageUrl}
+                                alt={item.name}
+                                height={400}
+                                width={400}
+                                sizes="100%" /> 
+                        : null}
       </div>
       <div className="flex-1 space-y-1">
         <h2 className="font-medium text-sm">{item.name}</h2>
@@ -26,7 +41,7 @@ export function MenuItemCard({ item }: MenuItemCardProps) {
             {item.description}
           </p>
         )}
-        <p className="text-sm font-semibold">${item.basePrice.toFixed(2)}</p>
+        <p className="text-sm font-semibold">${item.basePrice}</p>
       </div>
       <div className="flex items-center justify-between mt-2">
         <Link
