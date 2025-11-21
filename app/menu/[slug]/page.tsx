@@ -8,8 +8,9 @@ type Props = {
 };
 
 export default async function ItemDetailPage({ params }: Props) {
+  const decodeUrl = decodeURI(params.slug);
   const item = await prisma.item.findUnique({
-    where: { slug: params.slug },
+    where: { slug: decodeUrl },
   });
 
   if (!item) {

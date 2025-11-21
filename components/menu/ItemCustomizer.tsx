@@ -3,7 +3,9 @@
 import { useState } from "react";
 import { useCartStore } from "@/lib/cart-store";
 import { ItemType } from "@/types/item/item";
+import { CartItemType } from '@/types/hook/cartStorage/cartStorage';
 import { multiPriceHandler } from "@/app/utilities/utilities";
+import useCartStorage from '@/app/hooks/cartStorage/useCartStorage';
 
 type ItemCustomizerProps = {
   item: ItemType
@@ -11,6 +13,8 @@ type ItemCustomizerProps = {
 
 export function ItemCustomizer({ item }: ItemCustomizerProps) {
   const addItem = useCartStore((s) => s.addItem);
+
+  const { state, getCart, storeItem } = useCartStorage();
 
   // simple local state for demo – you can extend later
   const [size, setSize] = useState<"small" | "medium" | "large">("medium");
@@ -30,42 +34,40 @@ export function ItemCustomizer({ item }: ItemCustomizerProps) {
   const price = item.multiPrice ? JSON.parse(item.multiPrice) : {}
   const prices = multiPriceHandler(price, size);
 
-  const unitPrice = (prices || item.basePrice) + addonPrice;
+  const unitPrice = (prices || item.basePrice)  + (extraShot ? 0.8 : 0) + (oatMilk ? 0.5 : 0);
   const linePrice = (unitPrice ? unitPrice : 0) * quantity;
-
-  console.log(unitPrice)
 
   function handleAddToCart() {
     if (quantity < 1) return;
 
-    // build a unique id for this combination (item + options)
-    const keyParts = [
-      item.id,
-      size,
-      extraShot ? "extra-shot" : "",
-      oatMilk ? "oat-milk" : "",
-      noSugar ? "no-sugar" : "",
-      noFoam ? "no-foam" : "",
-      notes.trim(),
-    ].filter(Boolean);
+    try {
+      const cartItem: CartItemType = {
+        itemId: item.id,
+        name: item.name,
+        quantity,
+        size,
+        price: linePrice,
+        addOns: {
+          extraShot,
+          oatMilk,
+          noSugar,
+          noFoam
+        },
+        notes: notes.trim()
+      }
 
-    const id = keyParts.join("|");
+      const status = storeItem(cartItem);
 
-    addItem({
-      id,
-      itemId: item.id,
-      name: `${item.name} (${size})`,
-      basePrice: item.basePrice,
-      quantity,
-      finalLinePrice: linePrice,
-      notes: notes.trim() || undefined,
-    });
-
-    // simple reset or toast – for now just reset qty
-    setQuantity(1);
-    alert("Added to cart!");
+      if (status){
+        //toast
+      }
+      
+    } catch (error) {
+      //handle error
+    }
   }
 
+  console.log(getCart());
 
   return (
     <div className="space-y-4">

@@ -90,7 +90,7 @@ export default function CartPage() {
                 <div>
                   <p className="font-medium">{item.name}</p>
                   <p className="text-xs text-slate-500">
-                    Qty: {item.quantity} • Base: ${item.basePrice.toFixed(2)}
+                    Qty: {item.quantity} • Base: ${item.basePrice ? item.basePrice.toFixed(2) : 0}
                   </p>
                   <p className="text-xs text-slate-500">
                     Line total: ${item.finalLinePrice.toFixed(2)}

@@ -134,4 +134,5 @@ model OrderItem {
   quantity Int
   price    Float
   notes    String?
+  addOns   String?
 }
