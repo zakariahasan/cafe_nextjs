@@ -2,13 +2,11 @@
 
 import { useState } from "react";
 import { useCartStore } from "@/lib/cart-store";
+import { ItemType } from "@/types/item/item";
+import { multiPriceHandler } from "@/app/utilities/utilities";
 
 type ItemCustomizerProps = {
-  item: {
-    id: string;
-    name: string;
-    basePrice: number;
-  };
+  item: ItemType
 };
 
 export function ItemCustomizer({ item }: ItemCustomizerProps) {
@@ -28,8 +26,14 @@ export function ItemCustomizer({ item }: ItemCustomizerProps) {
     (extraShot ? 0.8 : 0) +
     (oatMilk ? 0.5 : 0); // you can change these numbers
 
-  const unitPrice = item.basePrice + addonPrice;
-  const linePrice = unitPrice * quantity;
+  
+  const price = item.multiPrice ? JSON.parse(item.multiPrice) : {}
+  const prices = multiPriceHandler(price, size);
+
+  const unitPrice = (prices || item.basePrice) + addonPrice;
+  const linePrice = (unitPrice ? unitPrice : 0) * quantity;
+
+  console.log(unitPrice)
 
   function handleAddToCart() {
     if (quantity < 1) return;
@@ -61,6 +65,7 @@ export function ItemCustomizer({ item }: ItemCustomizerProps) {
     setQuantity(1);
     alert("Added to cart!");
   }
+
 
   return (
     <div className="space-y-4">

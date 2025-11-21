@@ -2,28 +2,16 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import MenuItemCardType from "@/types/components/menuItemCard/menuItemCard";
-
-// export type SimpleMenuItem = {
-//   id: string;
-//   slug: string;
-//   name: string;
-//   description?: string | null;
-//   basePrice: number | null;
-//   isMultiPrice: boolean,
-//   multiPrice: string | null
-//   imageUrl?: string | null;
-// };
+import { ItemType } from "@/types/item/item";
 
 type Props = {
-  item: MenuItemCardType;
+  item: ItemType;
 };
 
 export function MenuItemCard({ item }: Props) {
 
   const t = item.multiPrice ? JSON.parse(item.multiPrice) : {}
-  console.log(item.basePrice)
-  console.log(t)
+
   return (
     <article className="bg-white border rounded-xl p-3 flex flex-col gap-2">
       <div className="aspect-video rounded-lg bg-slate-200 flex items-center justify-center text-xs text-slate-500">

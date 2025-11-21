@@ -16,7 +16,6 @@ export default async function ItemDetailPage({ params }: Props) {
     notFound();
   }
 
-
   return (
     <div className="grid gap-8 md:grid-cols-2">
       <div className="relative aspect-[4/3] bg-slate-200 rounded-xl flex items-center justify-center text-sm text-slate-500">
@@ -35,17 +34,13 @@ export default async function ItemDetailPage({ params }: Props) {
             </p>
           )}
           <p className="font-semibold mt-2">
-            Base price: ${item.basePrice.toFixed(2)}
+            Base price: ${item.basePrice ? item.basePrice.toFixed(2) : 0}
           </p>
         </div>
 
         {/* All the customisation & Add to Cart lives here */}
         <ItemCustomizer
-          item={{
-            id: item.id,
-            name: item.name,
-            basePrice: item.basePrice,
-          }}
+          item={item}
         />
       </div>
     </div>
