@@ -131,7 +131,54 @@ const useCartStorage = () => {
         }
     }
 
-    return { state, getCart, storeItem };
+    const removeItem = (item: CartItemType) => {
+        const cart = getCart();
+
+        if (cart){
+            try {
+                const itemIdx = cart?.items.findIndex(itm => itm.itemId === item.itemId && 
+                                                             itm.price === item.price &&
+                                                             itm.size === item.size &&
+                                                             itm.quantity === item.quantity );
+
+                
+                const priceToDeduct = item.price * item.quantity;
+
+                cart?.items.splice(itemIdx, 1);
+
+                if (cart.total?.subtotal) cart.total.subtotal -= priceToDeduct;
+                
+                const uniqueItem = [
+                    ...new Map(cart.items.map(itm => [itm.name, itm]))
+                ].map(([_, item]) => item).length;
+                
+                if (cart.total?.uniqueItems){
+                    cart.total.uniqueItems = uniqueItem;
+                }
+
+                if (cart.total?.itemCount) cart.total.itemCount -= 1;
+
+                setLocalStorage(cart);
+                setState(cart);
+            } catch (error) {
+                console.error(error);
+            }
+        }
+    }
+
+    const clearCartStorage = () => {
+        const cart = getCart();
+
+        if (!cart) return;
+
+        try {
+            localStorage.removeItem('cart');
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    return { state, getCart, storeItem, removeItem, clearCartStorage };
 }
     
 export default useCartStorage;

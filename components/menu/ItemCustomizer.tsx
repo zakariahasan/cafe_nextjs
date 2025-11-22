@@ -6,6 +6,9 @@ import { ItemType } from "@/types/item/item";
 import { CartItemType } from '@/types/hook/cartStorage/cartStorage';
 import { multiPriceHandler } from "@/app/utilities/utilities";
 import useCartStorage from '@/app/hooks/cartStorage/useCartStorage';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 type ItemCustomizerProps = {
   item: ItemType
@@ -24,12 +27,6 @@ export function ItemCustomizer({ item }: ItemCustomizerProps) {
   const [noFoam, setNoFoam] = useState(false);
   const [notes, setNotes] = useState("");
   const [quantity, setQuantity] = useState(1);
-
-  // price adjustments for add-ons
-  const addonPrice =
-    (extraShot ? 0.8 : 0) +
-    (oatMilk ? 0.5 : 0); // you can change these numbers
-
   
   const price = item.multiPrice ? JSON.parse(item.multiPrice) : {}
   const prices = multiPriceHandler(price, size);
@@ -59,7 +56,8 @@ export function ItemCustomizer({ item }: ItemCustomizerProps) {
       const status = storeItem(cartItem);
 
       if (status){
-        //toast
+        console.log(status)
+        toast.success(`${quantity} ${item.name} added to cart`);
       }
       
     } catch (error) {
@@ -71,6 +69,7 @@ export function ItemCustomizer({ item }: ItemCustomizerProps) {
 
   return (
     <div className="space-y-4">
+      <ToastContainer />
       {/* Size */}
       <div>
         <h2 className="text-sm font-semibold mb-1">Size</h2>
