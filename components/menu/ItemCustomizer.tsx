@@ -2,17 +2,22 @@
 
 import { useState } from "react";
 import { useCartStore } from "@/lib/cart-store";
+import { ItemType } from "@/types/item/item";
+import { CartItemType } from '@/types/hook/cartStorage/cartStorage';
+import { multiPriceHandler } from "@/app/utilities/utilities";
+import useCartStorage from '@/app/hooks/cartStorage/useCartStorage';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 type ItemCustomizerProps = {
-  item: {
-    id: string;
-    name: string;
-    basePrice: number;
-  };
+  item: ItemType
 };
 
 export function ItemCustomizer({ item }: ItemCustomizerProps) {
   const addItem = useCartStore((s) => s.addItem);
+
+  const { state, getCart, storeItem } = useCartStorage();
 
   // simple local state for demo – you can extend later
   const [size, setSize] = useState<"small" | "medium" | "large">("medium");
@@ -22,48 +27,49 @@ export function ItemCustomizer({ item }: ItemCustomizerProps) {
   const [noFoam, setNoFoam] = useState(false);
   const [notes, setNotes] = useState("");
   const [quantity, setQuantity] = useState(1);
+  
+  const price = item.multiPrice ? JSON.parse(item.multiPrice) : {}
+  const prices = multiPriceHandler(price, size);
 
-  // price adjustments for add-ons
-  const addonPrice =
-    (extraShot ? 0.8 : 0) +
-    (oatMilk ? 0.5 : 0); // you can change these numbers
-
-  const unitPrice = item.basePrice + addonPrice;
-  const linePrice = unitPrice * quantity;
+  const unitPrice = (prices || item.basePrice)  + (extraShot ? 0.8 : 0) + (oatMilk ? 0.5 : 0);
+  const linePrice = (unitPrice ? unitPrice : 0) * quantity;
 
   function handleAddToCart() {
     if (quantity < 1) return;
 
-    // build a unique id for this combination (item + options)
-    const keyParts = [
-      item.id,
-      size,
-      extraShot ? "extra-shot" : "",
-      oatMilk ? "oat-milk" : "",
-      noSugar ? "no-sugar" : "",
-      noFoam ? "no-foam" : "",
-      notes.trim(),
-    ].filter(Boolean);
+    try {
+      const cartItem: CartItemType = {
+        itemId: item.id,
+        name: item.name,
+        quantity,
+        size,
+        price: linePrice,
+        addOns: {
+          extraShot,
+          oatMilk,
+          noSugar,
+          noFoam
+        },
+        notes: notes.trim()
+      }
 
-    const id = keyParts.join("|");
+      const status = storeItem(cartItem);
 
-    addItem({
-      id,
-      itemId: item.id,
-      name: `${item.name} (${size})`,
-      basePrice: item.basePrice,
-      quantity,
-      finalLinePrice: linePrice,
-      notes: notes.trim() || undefined,
-    });
-
-    // simple reset or toast – for now just reset qty
-    setQuantity(1);
-    alert("Added to cart!");
+      if (status){
+        console.log(status)
+        toast.success(`${quantity} ${item.name} added to cart`);
+      }
+      
+    } catch (error) {
+      //handle error
+    }
   }
+
+  console.log(getCart());
 
   return (
     <div className="space-y-4">
+      <ToastContainer />
       {/* Size */}
       <div>
         <h2 className="text-sm font-semibold mb-1">Size</h2>

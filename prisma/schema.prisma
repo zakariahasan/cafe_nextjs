@@ -74,7 +74,7 @@ model Item {
   name        String
   slug        String     @unique
   description String?
-  basePrice   Float?
+  basePrice   Float
   isMultiPrice Boolean  @default(false)
   multiPrice  String?
   imageUrl    String?
@@ -134,4 +134,5 @@ model OrderItem {
   quantity Int
   price    Float
   notes    String?
+  addOns   String?
 }

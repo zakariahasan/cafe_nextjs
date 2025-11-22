@@ -6,7 +6,7 @@ export type CartItem = {
   id: string;
   itemId: string;
   name: string;
-  basePrice: number;
+  basePrice: number | null;
   quantity: number;
   finalLinePrice: number;
   notes?: string;

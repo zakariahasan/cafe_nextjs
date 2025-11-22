@@ -8,14 +8,14 @@ type Props = {
 };
 
 export default async function ItemDetailPage({ params }: Props) {
+  const decodeUrl = decodeURI(params.slug);
   const item = await prisma.item.findUnique({
-    where: { slug: params.slug },
+    where: { slug: decodeUrl },
   });
 
   if (!item) {
     notFound();
   }
-
 
   return (
     <div className="grid gap-8 md:grid-cols-2">
@@ -35,17 +35,13 @@ export default async function ItemDetailPage({ params }: Props) {
             </p>
           )}
           <p className="font-semibold mt-2">
-            Base price: ${item.basePrice.toFixed(2)}
+            Base price: ${item.basePrice ? item.basePrice.toFixed(2) : 0}
           </p>
         </div>
 
         {/* All the customisation & Add to Cart lives here */}
         <ItemCustomizer
-          item={{
-            id: item.id,
-            name: item.name,
-            basePrice: item.basePrice,
-          }}
+          item={item}
         />
       </div>
     </div>
